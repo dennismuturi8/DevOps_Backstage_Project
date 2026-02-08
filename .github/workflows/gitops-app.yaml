@@ -53,7 +53,7 @@ jobs:
       run: yarn install --immutable
 
     - name: Run Linter
-      run: yarn run lint
+      run: yarn run lint:all
 
     - name: Run Unit Tests
       run: yarn test
