@@ -32,6 +32,9 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
+      with:
+        # Fetch all history and tags so 'origin/master' or 'origin/main' exists
+        fetch-depth: 0 
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -53,6 +56,8 @@ jobs:
     - name: Install Dependencies
       # --immutable ensures the lockfile isn't changed in CI
       run: yarn install --immutable
+      env:
+        YARNSW_COREPACK_COMPAT: 'true'
 
     - name: Run Linter
       run: yarn run lint:all
