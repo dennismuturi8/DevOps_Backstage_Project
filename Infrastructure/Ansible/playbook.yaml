@@ -1,0 +1,66 @@
+---
+- name: Configure Kubeadm EC2 with Python, ArgoCD, and Nginx Ingress
+  hosts: control_plane
+  become: yes
+  vars:
+    kubeconfig: /etc/kubernetes/admin.conf
+    argo_namespace: argocd
+    nginx_namespace: ingress-nginx
+    # Pinning version prevents the "stable" tag from breaking your build overnight
+    argo_version: "v2.10.0" 
+
+  tasks:
+    ## 1. Prerequisites
+    - name: Ensure Python3 and Pip are installed
+      apt:
+        name: [python3, python3-pip, curl, git]
+        state: present
+        update_cache: yes
+
+    ## 2. Install Nginx Ingress
+    - name: Create Nginx Ingress Namespace
+      command: kubectl --kubeconfig {{ kubeconfig }} create namespace {{ nginx_namespace }}
+      register: ns_res
+      failed_when: false
+      changed_when: "'created' in ns_res.stdout"
+
+    - name: Apply Nginx Ingress
+      command: >
+        kubectl --kubeconfig {{ kubeconfig }} apply -f 
+        https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.9.4/deploy/static/provider/baremetal/deploy.yaml
+      register: nginx_out
+      changed_when: "'created' in nginx_out.stdout or 'configured' in nginx_out.stdout"
+
+    ## 3. Install ArgoCD
+    - name: Create ArgoCD Namespace
+      command: kubectl --kubeconfig {{ kubeconfig }} create namespace {{ argo_namespace }}
+      register: argo_ns_res
+      failed_when: false
+      changed_when: "'created' in argo_ns_res.stdout"
+
+    - name: Apply ArgoCD Manifest (Using Server-Side Apply)
+      # --server-side bypasses the 256KB annotation limit
+      command: >
+        kubectl --kubeconfig {{ kubeconfig }} apply --server-side --force-conflicts 
+        -n {{ argo_namespace }} -f 
+        https://raw.githubusercontent.com/argoproj/argo-cd/{{ argo_version }}/manifests/install.yaml
+      register: argo_out
+      changed_when: "'created' in argo_out.stdout or 'configured' in argo_out.stdout"
+
+    ## 4. Setup Local User Access
+    - name: Create .kube directory for ubuntu user
+      file:
+        path: "/home/ubuntu/.kube"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+
+    - name: Copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /home/ubuntu/.kube/config
+        remote_src: yes
+        owner: ubuntu
+        group: ubuntu
+        mode: '0600'

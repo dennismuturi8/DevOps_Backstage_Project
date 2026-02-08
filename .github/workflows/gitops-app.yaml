@@ -1,0 +1,110 @@
+name: Production GitOps Application Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'manifest/**'   # Prevents infinite GitOps loops
+  pull_request:
+    branches:
+      - main
+
+env:
+  APP_NAME: myapp
+  DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+  GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+  GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
+  GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+
+jobs:
+
+# ==================================================
+# STAGE 1: QUALITY GATE
+# ==================================================
+  test:
+    name: Unit Tests & Linting
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install Dependencies
+      run: npm ci
+
+    - name: Run Linter
+      run: npm run lint
+
+    - name: Run Unit Tests
+      run: npm test
+
+# ==================================================
+# STAGE 2: BUILD & SECURITY
+# ==================================================
+  build:
+    name: Build, Scan & Push Image
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Build Docker Image
+      run: |
+        DOCKER_BUILDKIT=1 docker build -t $DOCKER_USERNAME/$APP_NAME:${{ github.sha }} .
+
+    - name: Container Security Scan (Trivy)
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}
+        format: table
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
+
+    - name: Push Image to Docker Hub
+      run: |
+        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        docker push $DOCKER_USERNAME/$APP_NAME:${{ github.sha }}
+
+# ==================================================
+# STAGE 3: GITOPS UPDATE
+# ==================================================
+  deploy:
+    name: Update GitOps Manifests
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+    - name: Checkout Repository (with push access)
+      uses: actions/checkout@v3
+      with:
+        token: ${{ env.GIT_TOKEN }}
+
+    - name: Configure Git Identity
+      run: |
+        git config --global user.name "$GIT_USERNAME"
+        git config --global user.email "$GIT_EMAIL"
+
+    - name: Update Image Tag in Deployment Manifest
+      run: |
+        sed -i "s|image: .*|image: $DOCKER_USERNAME/$APP_NAME:${{ github.sha }}|g" \
+        manifest/deployment.yaml
+
+    - name: Commit & Push GitOps Change
+      run: |
+        git add manifest/deployment.yaml
+        git commit -m "chore(deploy): update image to ${{ github.sha }} [skip ci]"
+        git push origin main

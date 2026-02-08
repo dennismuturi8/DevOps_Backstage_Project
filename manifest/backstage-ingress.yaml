@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: backstage-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: kbucci.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: kbucci
+            port:
+              number: 7007
+        path: /
+        pathType: Exact
+status:
+  loadBalancer: {}
