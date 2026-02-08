@@ -36,14 +36,14 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '20'
-        cache: 'yarn'
-
+        
     - name: Enable Corepack
-      # This activates the specific Yarn version defined in your package.json
-      run: corepack enable
+      run: |
+        corepack enable
+        corepack prepare yarn@4.4.1 --activate
 
     - name: Install Dependencies
-      # Yarn 4 uses --immutable (the equivalent of 'npm ci')
+      # --immutable ensures the lockfile isn't changed in CI
       run: yarn install --immutable
 
     - name: Run Linter
@@ -51,7 +51,6 @@ jobs:
 
     - name: Run Unit Tests
       run: yarn test
-
 # ==================================================
 # STAGE 2: BUILD & SECURITY
 # ==================================================
