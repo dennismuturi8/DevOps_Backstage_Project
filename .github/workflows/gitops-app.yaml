@@ -24,7 +24,7 @@ jobs:
 # ==================================================
 # STAGE 1: QUALITY GATE
 # ==================================================
-  test:
+test:
     name: Unit Tests & Linting
     runs-on: ubuntu-latest
 
@@ -36,15 +36,14 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '20'
-        # We handle caching manually for Yarn 4 to avoid issues
         cache: 'yarn'
 
     - name: Enable Corepack
-      # This activates Yarn 4 as defined in your package.json
+      # This activates the specific Yarn version defined in your package.json
       run: corepack enable
 
     - name: Install Dependencies
-      # Yarn 4 uses --immutable instead of --frozen-lockfile
+      # Yarn 4 uses --immutable (the equivalent of 'npm ci')
       run: yarn install --immutable
 
     - name: Run Linter
