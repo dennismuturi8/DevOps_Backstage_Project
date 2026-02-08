@@ -55,7 +55,7 @@ test:
 # ==================================================
 # STAGE 2: BUILD & SECURITY
 # ==================================================
-  build:
+build:
     name: Build, Scan & Push Image
     needs: test
     runs-on: ubuntu-latest
@@ -87,7 +87,7 @@ test:
 # ==================================================
 # STAGE 3: GITOPS UPDATE
 # ==================================================
-  deploy:
+deploy:
     name: Update GitOps Manifests
     needs: build
     runs-on: ubuntu-latest
