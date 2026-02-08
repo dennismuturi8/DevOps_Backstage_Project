@@ -36,11 +36,16 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '20'
+        # We handle caching manually for Yarn 4 to avoid issues
         cache: 'yarn'
 
+    - name: Enable Corepack
+      # This activates Yarn 4 as defined in your package.json
+      run: corepack enable
+
     - name: Install Dependencies
-      # use '--frozen-lockfile' if you are using Yarn v1
-      run: yarn install --frozen-lockfile
+      # Yarn 4 uses --immutable instead of --frozen-lockfile
+      run: yarn install --immutable
 
     - name: Run Linter
       run: yarn run lint
