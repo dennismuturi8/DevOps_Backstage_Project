@@ -26,10 +26,17 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 # Install sqlite3 dependencies. You can skip this if you don't use sqlite3 in the image,
 # in which case you should also move better-sqlite3 to "devDependencies" in package.json.
+# Install isolate-vm dependencies, these are needed by the @backstage/plugin-scaffolder-backend.
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
-    apt-get install -y --no-install-recommends python3 g++ build-essential libv8-dev && \
+    apt-get install -y --no-install-recommends \
+    python3 \
+    g++ \
+    make \
+    build-essential \
+    libv8-dev \
+    pkg-config && \
     rm -rf /var/lib/apt/lists/*
 
 # Enable Corepack to ensure Yarn 4.x is used instead of the default Yarn 1.x
