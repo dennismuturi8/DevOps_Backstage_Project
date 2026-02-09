@@ -38,7 +38,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     libv8-dev \
     pkg-config && \
     rm -rf /var/lib/apt/lists/*
-
+    
 # Enable Corepack to ensure Yarn 4.x is used instead of the default Yarn 1.x
 RUN corepack enable
 
