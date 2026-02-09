@@ -1991,7 +1991,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/cli@npm:^0.35.2":
+"@backstage/cli@npm:^0.35.3":
   version: 0.35.3
   resolution: "@backstage/cli@npm:0.35.3"
   dependencies:
@@ -2609,7 +2609,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-auth-backend-module-github-provider@npm:^0.4.0":
+"@backstage/plugin-auth-backend-module-github-provider@npm:^0.4.1":
   version: 0.4.1
   resolution: "@backstage/plugin-auth-backend-module-github-provider@npm:0.4.1"
   dependencies:
@@ -2741,7 +2741,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-catalog-backend@npm:^3.3.1":
+"@backstage/plugin-catalog-backend@npm:^3.3.1, @backstage/plugin-catalog-backend@npm:^3.3.2":
   version: 3.3.2
   resolution: "@backstage/plugin-catalog-backend@npm:3.3.2"
   dependencies:
@@ -3230,7 +3230,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-permission-backend@npm:^0.7.7":
+"@backstage/plugin-permission-backend@npm:^0.7.8":
   version: 0.7.8
   resolution: "@backstage/plugin-permission-backend@npm:0.7.8"
   dependencies:
@@ -3265,7 +3265,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-permission-node@npm:^0.10.7, @backstage/plugin-permission-node@npm:^0.10.8, @backstage/plugin-permission-node@npm:^0.10.9":
+"@backstage/plugin-permission-node@npm:^0.10.7, @backstage/plugin-permission-node@npm:^0.10.9":
   version: 0.10.9
   resolution: "@backstage/plugin-permission-node@npm:0.10.9"
   dependencies:
@@ -3419,7 +3419,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-scaffolder-backend-module-github@npm:^0.9.4, @backstage/plugin-scaffolder-backend-module-github@npm:^0.9.5":
+"@backstage/plugin-scaffolder-backend-module-github@npm:^0.9.5":
   version: 0.9.5
   resolution: "@backstage/plugin-scaffolder-backend-module-github@npm:0.9.5"
   dependencies:
@@ -3472,7 +3472,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-scaffolder-backend@npm:^3.1.1":
+"@backstage/plugin-scaffolder-backend@npm:^3.1.2":
   version: 3.1.2
   resolution: "@backstage/plugin-scaffolder-backend@npm:3.1.2"
   dependencies:
@@ -3630,7 +3630,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-scaffolder@npm:^1.35.1":
+"@backstage/plugin-scaffolder@npm:^1.35.2":
   version: 1.35.2
   resolution: "@backstage/plugin-scaffolder@npm:1.35.2"
   dependencies:
@@ -3762,7 +3762,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-search-backend@npm:^2.0.10":
+"@backstage/plugin-search-backend@npm:^2.0.11":
   version: 2.0.11
   resolution: "@backstage/plugin-search-backend@npm:2.0.11"
   dependencies:
@@ -4199,7 +4199,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/ui@npm:^0.11.0":
+"@backstage/ui@npm:^0.11.2":
   version: 0.11.2
   resolution: "@backstage/ui@npm:0.11.2"
   dependencies:
@@ -6030,7 +6030,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/environment-jsdom-abstract@npm:^30.0.0":
+"@jest/environment-jsdom-abstract@npm:^30":
   version: 30.2.0
   resolution: "@jest/environment-jsdom-abstract@npm:30.2.0"
   dependencies:
@@ -14806,22 +14806,22 @@ __metadata:
   dependencies:
     "@backstage/app-defaults": "npm:^1.7.4"
     "@backstage/catalog-model": "npm:^1.7.6"
-    "@backstage/cli": "npm:^0.35.2"
-    "@backstage/core-app-api": "npm:^1.19.3"
-    "@backstage/core-components": "npm:^0.18.5"
-    "@backstage/core-plugin-api": "npm:^1.12.1"
+    "@backstage/cli": "npm:^0.35.3"
+    "@backstage/core-app-api": "npm:^1.19.4"
+    "@backstage/core-components": "npm:^0.18.6"
+    "@backstage/core-plugin-api": "npm:^1.12.2"
     "@backstage/integration-react": "npm:^1.2.14"
     "@backstage/plugin-api-docs": "npm:^0.13.3"
     "@backstage/plugin-catalog": "npm:^1.32.2"
     "@backstage/plugin-catalog-common": "npm:^1.1.7"
     "@backstage/plugin-catalog-graph": "npm:^0.5.6"
     "@backstage/plugin-catalog-import": "npm:^0.13.9"
-    "@backstage/plugin-catalog-react": "npm:^1.21.5"
+    "@backstage/plugin-catalog-react": "npm:^1.21.6"
     "@backstage/plugin-kubernetes": "npm:^0.12.15"
     "@backstage/plugin-notifications": "npm:^0.5.13"
     "@backstage/plugin-org": "npm:^0.6.48"
     "@backstage/plugin-permission-react": "npm:^0.4.39"
-    "@backstage/plugin-scaffolder": "npm:^1.35.1"
+    "@backstage/plugin-scaffolder": "npm:^1.35.2"
     "@backstage/plugin-search": "npm:^1.5.3"
     "@backstage/plugin-search-react": "npm:^1.10.2"
     "@backstage/plugin-signals": "npm:^0.0.27"
@@ -14831,7 +14831,7 @@ __metadata:
     "@backstage/plugin-user-settings": "npm:^0.8.31"
     "@backstage/test-utils": "npm:^1.7.14"
     "@backstage/theme": "npm:^0.7.1"
-    "@backstage/ui": "npm:^0.11.0"
+    "@backstage/ui": "npm:^0.11.2"
     "@material-ui/core": "npm:^4.12.2"
     "@material-ui/icons": "npm:^4.9.1"
     "@playwright/test": "npm:^1.32.3"
@@ -15450,28 +15450,28 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "backend@workspace:packages/backend"
   dependencies:
-    "@backstage/backend-defaults": "npm:^0.15.0"
-    "@backstage/cli": "npm:^0.35.2"
+    "@backstage/backend-defaults": "npm:^0.15.1"
+    "@backstage/cli": "npm:^0.35.3"
     "@backstage/config": "npm:^1.3.6"
     "@backstage/plugin-app-backend": "npm:^0.5.10"
     "@backstage/plugin-auth-backend": "npm:^0.26.0"
-    "@backstage/plugin-auth-backend-module-github-provider": "npm:^0.4.0"
+    "@backstage/plugin-auth-backend-module-github-provider": "npm:^0.4.1"
     "@backstage/plugin-auth-backend-module-guest-provider": "npm:^0.2.15"
-    "@backstage/plugin-auth-node": "npm:^0.6.11"
-    "@backstage/plugin-catalog-backend": "npm:^3.3.1"
+    "@backstage/plugin-auth-node": "npm:^0.6.12"
+    "@backstage/plugin-catalog-backend": "npm:^3.3.2"
     "@backstage/plugin-catalog-backend-module-logs": "npm:^0.1.18"
     "@backstage/plugin-catalog-backend-module-scaffolder-entity-model": "npm:^0.2.16"
     "@backstage/plugin-kubernetes-backend": "npm:^0.21.0"
     "@backstage/plugin-notifications-backend": "npm:^0.6.1"
-    "@backstage/plugin-permission-backend": "npm:^0.7.7"
+    "@backstage/plugin-permission-backend": "npm:^0.7.8"
     "@backstage/plugin-permission-backend-module-allow-all-policy": "npm:^0.2.15"
-    "@backstage/plugin-permission-common": "npm:^0.9.4"
-    "@backstage/plugin-permission-node": "npm:^0.10.8"
+    "@backstage/plugin-permission-common": "npm:^0.9.5"
+    "@backstage/plugin-permission-node": "npm:^0.10.9"
     "@backstage/plugin-proxy-backend": "npm:^0.6.9"
-    "@backstage/plugin-scaffolder-backend": "npm:^3.1.1"
-    "@backstage/plugin-scaffolder-backend-module-github": "npm:^0.9.4"
+    "@backstage/plugin-scaffolder-backend": "npm:^3.1.2"
+    "@backstage/plugin-scaffolder-backend-module-github": "npm:^0.9.5"
     "@backstage/plugin-scaffolder-backend-module-notifications": "npm:^0.1.18"
-    "@backstage/plugin-search-backend": "npm:^2.0.10"
+    "@backstage/plugin-search-backend": "npm:^2.0.11"
     "@backstage/plugin-search-backend-module-catalog": "npm:^0.3.11"
     "@backstage/plugin-search-backend-module-pg": "npm:^0.5.51"
     "@backstage/plugin-search-backend-module-techdocs": "npm:^0.4.10"
@@ -23478,7 +23478,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsdom@npm:^27.1.0, jsdom@npm:^27.4.0":
+"jsdom@npm:^27, jsdom@npm:^27.4.0":
   version: 27.4.0
   resolution: "jsdom@npm:27.4.0"
   dependencies:
@@ -30042,10 +30042,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root@workspace:."
   dependencies:
-    "@backstage/cli": "npm:^0.35.2"
+    "@backstage/cli": "npm:^0.35.3"
     "@backstage/e2e-test-utils": "npm:^0.1.1"
     "@backstage/eslint-plugin": "npm:^0.2.0"
-    "@jest/environment-jsdom-abstract": "npm:^30.0.0"
+    "@jest/environment-jsdom-abstract": "npm:^30"
     "@playwright/test": "npm:^1.32.3"
     "@spotify/eslint-config-base": "npm:^15.0.0"
     "@spotify/eslint-config-react": "npm:^15.0.0"
@@ -30072,7 +30072,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^7.0.1"
     eslint-plugin-unused-imports: "npm:^4.3.0"
     jest: "npm:^30.2.0"
-    jsdom: "npm:^27.1.0"
+    jsdom: "npm:^27"
     node-gyp: "npm:^10.0.0"
     prettier: "npm:^2.3.2"
     typescript: "npm:~5.8.0"
