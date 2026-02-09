@@ -81,7 +81,11 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        DOCKER_BUILDKIT=1 docker build -t $DOCKER_USERNAME/$APP_NAME:${{ github.sha }} .
+        # Use ${{ env.VAR }} to ensure the values are injected correctly
+        docker build -t ${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }} .
+      env:
+        DOCKER_USERNAME: ${{ env.DOCKER_USERNAME }}
+        APP_NAME: ${{ env.APP_NAME }}
 
     - name: Container Security Scan (Trivy)
       uses: aquasecurity/trivy-action@master
