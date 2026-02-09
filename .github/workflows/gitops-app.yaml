@@ -83,10 +83,7 @@ jobs:
       run: |
         # Use ${{ env.VAR }} to ensure the values are injected correctly
         docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }} .
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-        APP_NAME: ${{ env.APP_NAME }}
-
+      
     - name: Container Security Scan (Trivy)
       uses: aquasecurity/trivy-action@master
       with:
