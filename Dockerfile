@@ -18,15 +18,9 @@ FROM node:24-trixie-slim
 ENV PYTHON=/usr/bin/python3
 
 # Install isolate-vm dependencies, these are needed by the @backstage/plugin-scaffolder-backend.
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && \
-    apt-get install -y --no-install-recommends python3 g++ build-essential && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install sqlite3 dependencies. You can skip this if you don't use sqlite3 in the image,
+# Also includes sqlite3 dependencies. You can skip libsqlite3-dev if you don't use sqlite3 in the image,
 # in which case you should also move better-sqlite3 to "devDependencies" in package.json.
-# Install isolate-vm dependencies, these are needed by the @backstage/plugin-scaffolder-backend.
+
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
@@ -36,12 +30,14 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     make \
     build-essential \
     libv8-dev \
+    libsqlite3-dev \
     pkg-config && \
     rm -rf /var/lib/apt/lists/*
     
 # Enable Corepack to ensure Yarn 4.x is used instead of the default Yarn 1.x
 RUN corepack enable
 
+# Pre-create the Corepack cache directory and give the node user ownership to avoid EACCES errors
 RUN mkdir -p /home/node/.cache/node/corepack && chown -R node:node /home/node/.cache
 
 # From here on we use the least-privileged `node` user to run the backend.
