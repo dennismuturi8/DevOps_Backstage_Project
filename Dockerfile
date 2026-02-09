@@ -35,6 +35,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # Enable Corepack to ensure Yarn 4.x is used instead of the default Yarn 1.x
 RUN corepack enable
 
+RUN mkdir -p /home/node/.cache/node/corepack && chown -R node:node /home/node/.cache
+
 # From here on we use the least-privileged `node` user to run the backend.
 USER node
 
