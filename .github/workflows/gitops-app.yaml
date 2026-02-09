@@ -11,7 +11,7 @@ on:
       - main
 
 env:
-  APP_NAME: myapp
+  APP_NAME: backstage
   DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
   GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
@@ -47,7 +47,7 @@ jobs:
         corepack prepare yarn@4.4.1 --activate
 
     - name: Install Build Dependencies
-    
+
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential python3 libv8-dev
