@@ -1,0 +1,2 @@
+# Waiting for tar 7.5.8 release to fix path traversal
+CVE-2026-24842
