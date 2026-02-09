@@ -29,7 +29,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
-    apt-get install -y --no-install-recommends libsqlite3-dev && \
+    apt-get install -y --no-install-recommends python3 g++ build-essential libv8-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Enable Corepack to ensure Yarn 4.x is used instead of the default Yarn 1.x
