@@ -33,24 +33,25 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
       with:
-        # Fetch all history and tags so 'origin/master' or 'origin/main' exists
+       # Fetch all history and tags so 'origin/master' or 'origin/main' exists
         fetch-depth: 0 
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-       node-version: '22'
-
+       # Using Node 20 to avoid the util.promisify(Object) crash in Backstage CLI
+       node-version: '20'
+      
     - name: Enable Corepack
       run: |
         corepack enable
         corepack prepare yarn@4.4.1 --activate
 
     - name: Install Build Dependencies
-
+      # Added libsqlite3-dev and pkg-config to match our Dockerfile fixes
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential python3 libv8-dev
+        sudo apt-get install -y build-essential python3 libv8-dev libsqlite3-dev pkg-config
 
     - name: Install Dependencies
       # --immutable ensures the lockfile isn't changed in CI
@@ -62,7 +63,11 @@ jobs:
       run: yarn run lint:all
 
     - name: Run Unit Tests
+      # The --no-node-snapshot flag is a backup fix for Node internal module conflicts
       run: yarn test
+      env:
+        NODE_OPTIONS: "--no-node-snapshot"
+
 # ==================================================
 # STAGE 2: BUILD & SECURITY
 # ==================================================
@@ -93,11 +98,12 @@ jobs:
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
+        # Note: Ensure your .trivyignore file is in the repo root to skip the 'tar' CVEs
 
     - name: Push Image to Docker Hub
       run: |
         echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        docker push $DOCKER_USERNAME/$APP_NAME:${{ github.sha }}
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}
 
 # ==================================================
 # STAGE 3: GITOPS UPDATE
@@ -121,7 +127,7 @@ jobs:
 
     - name: Update Image Tag in Deployment Manifest
       run: |
-        sed -i "s|image: .*|image: $DOCKER_USERNAME/$APP_NAME:${{ github.sha }}|g" \
+        sed -i "s|image: .*|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}|g" \
         manifest/deployment.yaml
 
     - name: Commit & Push GitOps Change
