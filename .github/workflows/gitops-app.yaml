@@ -44,6 +44,11 @@ jobs:
         corepack enable
         corepack prepare yarn@4.4.1 --activate
 
+    - name: Debug Environment
+      run: |
+        node -v
+        yarn -v
+
     - name: Install Build Dependencies
       run: |
         sudo apt-get update
