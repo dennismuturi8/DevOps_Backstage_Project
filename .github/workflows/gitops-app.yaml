@@ -20,8 +20,6 @@ env:
   YARNSW_COREPACK_COMPAT: 'true'
 
 jobs:
-
-
 # ==================================================
 # STAGE 1: QUALITY GATE
 # ==================================================
@@ -33,13 +31,12 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
       with:
-       # Fetch all history and tags so 'origin/master' or 'origin/main' exists
         fetch-depth: 0 
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-       # Using Node 20 to avoid the util.promisify(Object) crash in Backstage CLI
+       # Reverted to Node 20 to resolve the util.promisify crash
        node-version: '20'
       
     - name: Enable Corepack
@@ -48,13 +45,11 @@ jobs:
         corepack prepare yarn@4.4.1 --activate
 
     - name: Install Build Dependencies
-      # Added libsqlite3-dev and pkg-config to match our Dockerfile fixes
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential python3 libv8-dev libsqlite3-dev pkg-config
+        sudo apt-get install -y build-essential python3 libv8-dev
 
     - name: Install Dependencies
-      # --immutable ensures the lockfile isn't changed in CI
       run: yarn install --immutable
       env:
         YARNSW_COREPACK_COMPAT: 'true'
@@ -63,10 +58,7 @@ jobs:
       run: yarn run lint:all
 
     - name: Run Unit Tests
-      # The --no-node-snapshot flag is a backup fix for Node internal module conflicts
       run: yarn test
-      env:
-        NODE_OPTIONS: "--no-node-snapshot"
 
 # ==================================================
 # STAGE 2: BUILD & SECURITY
@@ -86,7 +78,6 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        # Use ${{ env.VAR }} to ensure the values are injected correctly
         docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }} .
        
     - name: Container Security Scan (Trivy)
@@ -98,7 +89,6 @@ jobs:
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
-        # Note: Ensure your .trivyignore file is in the repo root to skip the 'tar' CVEs
 
     - name: Push Image to Docker Hub
       run: |
@@ -135,3 +125,4 @@ jobs:
         git add manifest/deployment.yaml
         git commit -m "chore(deploy): update image to ${{ github.sha }} [skip ci]"
         git push origin main
+        
