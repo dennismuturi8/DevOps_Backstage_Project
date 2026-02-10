@@ -37,7 +37,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         # PINNED TO 20. This is the version where promisify works correctly with the CLI.
-        node-version: '20.x'
+        node-version: '20.18.0'
       
     - name: Enable Corepack
       run: |
