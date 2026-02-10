@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": "22 || 24"
+    "node": "20"
   },
   "scripts": {
     "start": "backstage-cli repo start",
@@ -70,6 +70,7 @@
     "isolated-vm": "^5.0.1",
     "fast-xml-parser": "5.3.4",
     "glob": "10.5.0",
+    "graceful-fs": "4.2.11",
     "tar": "7.5.7"
   },
   "prettier": "@backstage/cli/config/prettier",
