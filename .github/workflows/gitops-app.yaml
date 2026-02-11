@@ -54,6 +54,7 @@ jobs:
       env:
         CXX: g++
         YARNSW_COREPACK_COMPAT: 'true'
+        npm_config_nodedir: ${{ env.NODE_PATH }}
 
     - name: Run Linter
       run: yarn run lint:all
