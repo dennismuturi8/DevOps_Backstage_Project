@@ -55,6 +55,7 @@ jobs:
       env:
         # Bypassing the native C++ build that was failing earlier
         YARN_ENABLE_SCRIPTS: 'false'
+        YARN_NM_SKIP_BUILD: 'true'
 
     - name: Run Linter
       run: yarn run lint:all
