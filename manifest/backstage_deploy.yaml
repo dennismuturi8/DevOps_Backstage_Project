@@ -5,7 +5,7 @@ metadata:
     app: backstage
   name: backstage
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: backstage
@@ -22,9 +22,9 @@ spec:
         - containerPort: 7007
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
             memory: "512Mi"
             cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
 status: {}
