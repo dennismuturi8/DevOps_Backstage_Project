@@ -118,10 +118,10 @@ jobs:
     - name: Update Image Tag
       run: |
         sed -i "s|image: ${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:.*|image: ${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}|g" \
-        manifest/deployment.yaml
+        manifest/backstage_deploy.yaml
 
     - name: Commit & Push GitOps Change
       run: |
-        git add manifest/deployment.yaml
+        git add manifest/backstage_deploy.yaml
         git commit -m "chore(deploy): update ${{ env.APP_NAME }} to ${{ github.sha }} [skip ci]"
         git push origin main
