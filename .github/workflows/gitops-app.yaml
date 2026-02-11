@@ -51,6 +51,9 @@ jobs:
 
     - name: Install Dependencies
       run: yarn install --immutable
+      env:
+        CXX: g++
+        YARNSW_COREPACK_COMPAT: 'true'
 
     - name: Run Linter
       run: yarn run lint:all
