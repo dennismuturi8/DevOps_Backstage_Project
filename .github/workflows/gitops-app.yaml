@@ -30,19 +30,15 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0 
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20.18.0'
-        # REMOVED: cache: 'yarn' (This was causing the version conflict)
       
     - name: Enable Corepack
       run: |
         corepack enable
-        # This force-activates the version specified in your package.json
         corepack prepare yarn@4.4.1 --activate
 
     - name: Install Build Dependencies
@@ -51,14 +47,11 @@ jobs:
         sudo apt-get install -y build-essential python3
 
     - name: Install Dependencies
-      run: yarn install --immutable
-      env:
-        # Bypassing the native C++ build that was failing earlier
-        YARN_ENABLE_SCRIPTS: 'false'
-        YARN_NM_SKIP_BUILD: 'true'
+      # This is the Yarn 4 way to skip the isolated-vm build
+      run: yarn install --immutable --mode=skip-build
 
     - name: Run Linter
-      run: yarn run lint:all
+      run: yarn lint:all
 
     - name: Run Unit Tests
       run: yarn test
