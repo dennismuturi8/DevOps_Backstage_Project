@@ -16,7 +16,7 @@ spec:
         app: backstage
     spec:
       containers:
-      - image: dennismuturi8/backstage:c80260ae0021d219602f4215d729ec75b7bcb2a9
+      - image: dennismuturi8/backstage:5c61928c2d64d7baef61ac79e3d62752a20020c6
         name: backstage
         ports:
         - containerPort: 7007
