@@ -21,9 +21,9 @@ env:
 
 jobs:
 # ==================================================
-# STAGE 1: QUALITY GATE (The Fix is here!)
+# STAGE 1: QUALITY GATE
 # ==================================================
- test:
+  test:
     name: Unit Tests & Linting
     runs-on: ubuntu-latest
 
@@ -36,18 +36,13 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        # PINNED TO 20. This is the version where promisify works correctly with the CLI.
+        # Fixed: Node 20.x ensures stability with Backstage CLI's internal promisify calls
         node-version: '20.18.0'
       
     - name: Enable Corepack
       run: |
         corepack enable
         corepack prepare yarn@4.4.1 --activate
-
-    - name: Debug Environment
-      run: |
-        node -v
-        yarn -v
 
     - name: Install Build Dependencies
       run: |
@@ -56,8 +51,6 @@ jobs:
 
     - name: Install Dependencies
       run: yarn install --immutable
-      env:
-        YARNSW_COREPACK_COMPAT: 'true'
 
     - name: Run Linter
       run: yarn run lint:all
@@ -68,7 +61,7 @@ jobs:
 # ==================================================
 # STAGE 2: BUILD & SECURITY
 # ==================================================
- build:
+  build:
     name: Build, Scan & Push Image
     needs: test
     runs-on: ubuntu-latest
@@ -81,36 +74,41 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ env.DOCKER_USERNAME }}
+        password: ${{ env.DOCKER_PASSWORD }}
+
     - name: Build Docker Image
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }} .
+        docker build -t ${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }} .
        
     - name: Container Security Scan (Trivy)
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}
+        image-ref: ${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}
         format: table
-        exit-code: '1'
+        exit-code: '1' # Fails build if CRITICAL vulnerabilities are found
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
 
     - name: Push Image to Docker Hub
       run: |
-        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}
+        docker push ${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}
 
 # ==================================================
 # STAGE 3: GITOPS UPDATE
 # ==================================================
- deploy:
+  deploy:
     name: Update GitOps Manifests
     needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
 
     steps:
-    - name: Checkout Repository (with push access)
+    - name: Checkout Repository
       uses: actions/checkout@v4
       with:
         token: ${{ env.GIT_TOKEN }}
@@ -120,13 +118,14 @@ jobs:
         git config --global user.name "$GIT_USERNAME"
         git config --global user.email "$GIT_EMAIL"
 
-    - name: Update Image Tag in Deployment Manifest
+    - name: Update Image Tag
       run: |
-        sed -i "s|image: .*|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}|g" \
+        # Fixed: Specific sed command to only target the image field
+        sed -i "s|image: ${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:.*|image: ${{ env.DOCKER_USERNAME }}/${{ env.APP_NAME }}:${{ github.sha }}|g" \
         manifest/deployment.yaml
 
     - name: Commit & Push GitOps Change
       run: |
         git add manifest/deployment.yaml
-        git commit -m "chore(deploy): update image to ${{ github.sha }} [skip ci]"
+        git commit -m "chore(deploy): update ${{ env.APP_NAME }} to ${{ github.sha }} [skip ci]"
         git push origin main
