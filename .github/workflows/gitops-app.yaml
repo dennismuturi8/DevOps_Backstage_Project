@@ -21,7 +21,7 @@ env:
 
 jobs:
 # ==================================================
-# STAGE 1: QUALITY GATE (Fixed to bypass isolated-vm)
+# STAGE 1: QUALITY GATE
 # ==================================================
   test:
     name: Unit Tests & Linting
@@ -37,11 +37,12 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20.18.0'
-        cache: 'yarn' # This helps speed up subsequent runs
+        # REMOVED: cache: 'yarn' (This was causing the version conflict)
       
     - name: Enable Corepack
       run: |
         corepack enable
+        # This force-activates the version specified in your package.json
         corepack prepare yarn@4.4.1 --activate
 
     - name: Install Build Dependencies
@@ -50,9 +51,9 @@ jobs:
         sudo apt-get install -y build-essential python3
 
     - name: Install Dependencies
-      # We use YARN_ENABLE_SCRIPTS: false to prevent isolated-vm from trying to compile
       run: yarn install --immutable
       env:
+        # Bypassing the native C++ build that was failing earlier
         YARN_ENABLE_SCRIPTS: 'false'
 
     - name: Run Linter
