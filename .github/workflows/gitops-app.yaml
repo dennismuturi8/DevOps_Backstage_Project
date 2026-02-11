@@ -47,7 +47,6 @@ jobs:
         sudo apt-get install -y build-essential python3
 
     - name: Install Dependencies
-      # This is the Yarn 4 way to skip the isolated-vm build
       run: yarn install --immutable --mode=skip-build
 
     - name: Run Linter
